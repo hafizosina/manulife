@@ -9,12 +9,19 @@ CREATE TABLE M_USER (
     password VARCHAR(255),
     role VARCHAR(255),
     address VARCHAR(255),
-    image VARCHAR(255),
-
-    -- Columns from BaseEntity
+    image BLOB,
     CREATED_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CREATED_BY VARCHAR(50),
     MODIFIED_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     MODIFIED_BY VARCHAR(50),
     IS_DELETED BOOLEAN DEFAULT FALSE NOT NULL
 );
+
+
+
+--THIS is for postgres, but H2 does not support unique constraint with condition
+
+--CREATE UNIQUE INDEX unique_email_not_deleted
+--ON M_USER (email)
+--WHERE is_deleted = FALSE;
+

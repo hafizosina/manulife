@@ -17,7 +17,6 @@ public class UserProfileFactory implements AbstractFactory<MasterUser, UserProfi
                 .password(null)
                 .role(entity.getRole())
                 .address(entity.getAddress())
-                .image(entity.getImage())
                 .build();
     }
 
@@ -33,7 +32,8 @@ public class UserProfileFactory implements AbstractFactory<MasterUser, UserProfi
         }
         entity.setRole(dto.getRole());
         entity.setAddress(dto.getAddress());
-        entity.setImage(dto.getImage());
+        // image upload seperately
+        // entity.setImage(dto.getImage());
         return entity;
     }
 }

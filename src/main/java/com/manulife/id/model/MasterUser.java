@@ -38,6 +38,7 @@ public class MasterUser extends BaseEntity{
     @Column(name = "address")
     private String address;
 
-    @Column(name = "image")
-    private String image;
+    @Lob
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
 }
