@@ -1,0 +1,11 @@
+INSERT INTO M_USER (fullname, email, username, password, role, address, image, CREATED_BY, MODIFIED_BY) VALUES
+('John Doe', 'john.doe@example.com', 'johndoe', 'password123', 'ADMIN', '123 Elm St, Springfield', NULL, 'admin', 'admin'),
+('Jane Smith', 'jane.smith@example.com', 'janesmith', 'password123', 'ADMIN', '456 Maple Ave, Springfield', NULL, 'admin', 'admin'),
+('Alice Johnson', 'alice.johnson@example.com', 'alicejohnson', 'password123', 'USER', '789 Oak St, Springfield', NULL, 'admin', 'admin'),
+('Bob Brown', 'bob.brown@example.com', 'bobbrown', 'password123', 'USER', '321 Pine St, Springfield', NULL, 'admin', 'admin'),
+('Charlie Green', 'charlie.green@example.com', 'charliegreen', 'password123', 'USER', '654 Cedar Ave, Springfield', NULL, 'admin', 'admin'),
+('David White', 'david.white@example.com', 'davidwhite', 'password123', 'USER', '987 Birch St, Springfield', NULL, 'admin', 'admin'),
+('Eva Black', 'eva.black@example.com', 'evablack', 'password123', 'USER', '135 Spruce Dr, Springfield', NULL, 'admin', 'admin'),
+('Frank Yellow', 'frank.yellow@example.com', 'frankyellow', 'password123', 'USER', '246 Walnut St, Springfield', NULL, 'admin', 'admin'),
+('Grace Blue', 'grace.blue@example.com', 'graceblue', 'password123', 'USER', '357 Cherry Ln, Springfield', NULL, 'admin', 'admin'),
+('Henry Purple', 'henry.purple@example.com', 'henrypurple', 'password123', 'USER', '468 Chestnut St, Springfield', NULL, 'admin', 'admin');
