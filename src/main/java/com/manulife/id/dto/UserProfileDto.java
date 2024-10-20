@@ -1,5 +1,6 @@
 package com.manulife.id.dto;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserProfileDto {
 
+    @Hidden
     private Long id;
     private String fullname;
     private String email;
