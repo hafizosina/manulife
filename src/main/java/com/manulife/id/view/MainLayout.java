@@ -1,5 +1,7 @@
 package com.manulife.id.view;
 
+import com.manulife.id.exception.VadiinExceptionHandler;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -13,6 +15,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
+        UI.getCurrent().getSession().setErrorHandler(new VadiinExceptionHandler());
         H1 logo = new H1("Manulife Indonesia");
         logo.addClassNames("text-l", "m-m");
 

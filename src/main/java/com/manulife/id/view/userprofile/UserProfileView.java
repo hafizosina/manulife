@@ -1,8 +1,10 @@
 package com.manulife.id.view.userprofile;
 
+import com.manulife.id.constant.ResponseCode;
 import com.manulife.id.dto.RequestPaging;
 import com.manulife.id.dto.ResponsePagingDto;
 import com.manulife.id.dto.UserProfileDto;
+import com.manulife.id.exception.BadRequestException;
 import com.manulife.id.service.UserProfileService;
 import com.manulife.id.view.MainLayout;
 import com.vaadin.flow.component.button.Button;
@@ -106,7 +108,8 @@ public class UserProfileView extends VerticalLayout {
                 dialog.close();
                 loadUserProfileDtos(currentPage);
             } else {
-                Notification.show("Please fill in all fields correctly.", 3000, Notification.Position.MIDDLE);
+                throw new BadRequestException("Please fill in all fields correctly.", ResponseCode.IMPORTANT_DATA_IS_EMPTY);
+//                Notification.show("Please fill in all fields correctly.", 3000, Notification.Position.MIDDLE);
             }
         });
 
