@@ -35,3 +35,6 @@ build/
 ### vadin
 /src/main/frontend/*
 
+### H2 Database
+/src/main/resources/database
+
