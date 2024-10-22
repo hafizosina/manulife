@@ -64,15 +64,27 @@ public class UserProfileView extends VerticalLayout {
 
         this.grid = new Grid<>();
 
-        grid.addColumn(UserProfileDto::getFullname).setHeader("Full Name");
-        grid.addColumn(UserProfileDto::getUsername).setHeader("Username");
-//        grid.addColumn(UserProfileDto::getEmail).setHeader("Email");
-//        grid.addColumn(UserProfileDto::getRole).setHeader("Role");
-//        grid.addColumn(UserProfileDto::getAddress).setHeader("Address");
-        grid.addComponentColumn(this::createImageComponent).setHeader("Image");
-        grid.addComponentColumn(this::createUploadImageButton).setHeader("Upload");
-        grid.addComponentColumn(this::createEditButton).setHeader("Edit");
-        grid.addComponentColumn(this::createDeleteButton).setHeader("Delete");
+        grid.addColumn(UserProfileDto::getFullname).setHeader("Full Name")
+                .setWidth("15%");
+        grid.addColumn(UserProfileDto::getUsername).setHeader("Username")
+                .setWidth("15%");
+        grid.addColumn(UserProfileDto::getEmail).setHeader("Email")
+                .setWidth("15%");
+        grid.addColumn(UserProfileDto::getRole).setHeader("Role")
+                .setWidth("10%");
+        grid.addColumn(UserProfileDto::getAddress).setHeader("Address")
+                .setWidth("15%");
+        grid.addComponentColumn(this::createImageComponent).setHeader("Image")
+                .setWidth("7%");
+        grid.addComponentColumn(this::createUploadImageButton).setHeader("Upload")
+                .setWidth("7%")
+                .setFlexGrow(0);
+        grid.addComponentColumn(this::createEditButton).setHeader("Edit")
+                .setWidth("7%")
+                .setFlexGrow(0);
+        grid.addComponentColumn(this::createDeleteButton).setHeader("Delete")
+                .setWidth("7%")
+                .setFlexGrow(0);;
 
         previousButton = new Button("Previous", event -> loadUserProfileDtos(--currentPage));
         nextButton = new Button("Next", event -> loadUserProfileDtos(++currentPage));

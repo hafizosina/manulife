@@ -150,7 +150,7 @@ public class UserProfileService {
                 .collect(Collectors.toList());
 
         for (UserProfileDto user : listDto) {
-            if (user.getImageBase64() == null) {
+            if (user.getImage() == null) {
                 user.setImageBase64(encodedImage);
             }else {
                 String base64 = Base64.getEncoder().encodeToString(user.getImage());
