@@ -8,8 +8,6 @@ Welcome to the Manulife Indonesia project! This project is built using Java Spri
 - [Running the Application](#running-the-application)
 - [Accessing the Application](#accessing-the-application)
 - [API Documentation](#api-documentation)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Prerequisites
 
