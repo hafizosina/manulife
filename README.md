@@ -49,6 +49,16 @@ http://localhost:8080/api/manulife/
 ```
 This will take you to the main web app.
 
+![img.png](img.png)
+1. Click on 'Go to User Page' to access the User Management
+![img_1.png](img_1.png)
+2. Click on 'Create' Button to create new User
+3. Click on 'Update' Button to update data user
+4. Click on 'Delete' Button to delete existing User
+5. Click on 'Upload' Button to upload user image
+6. Lastly, you can click on 'Generate Report' to download the report of all user
+7. ![img_2.png](img_2.png)
+
 ## API Documentation
 
 For API documentation, you can access via
