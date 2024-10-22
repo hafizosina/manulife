@@ -133,9 +133,12 @@ public class UserProfileService {
         String template = "/templates/SimpleReport.jrxml";
 
         List<MasterUser> listEntity = repository.findAllByIsDeletedFalse();
+        List<UserProfileDto> listDto = listEntity.stream()
+                .map(x -> factory.buildDto(x))
+                .collect(Collectors.toList());
         Map<String, Object> data = new HashMap<>();
 
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listEntity);
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listDto);
         return PDFGenerator.generateJasperFile(template,data, dataSource);
     }
 
