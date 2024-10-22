@@ -67,8 +67,10 @@ public class UserProfileService {
         if ( !StringUtil.isValidEmail(request.getEmail()) )
             throw new BadRequestException("Email is not valid", ResponseCode.EMAIL_IS_NOD_VALID);
 
-        boolean isEmailExist = repository.existsByEmailAndIsDeletedFalse(request.getEmail());
-        if ( isEmailExist ) throw new BadRequestException("Email is already used", ResponseCode.EMAIL_ALREADY_USED);
+        if (!request.getEmail().equals(entity.getEmail())){
+            boolean isEmailExist = repository.existsByEmailAndIsDeletedFalse(request.getEmail());
+            if ( isEmailExist ) throw new BadRequestException("Email is already used", ResponseCode.EMAIL_ALREADY_USED);
+        }
 
         // saving
         factory.fillEntity(request, entity);
