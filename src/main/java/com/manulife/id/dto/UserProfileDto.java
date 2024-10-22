@@ -21,4 +21,5 @@ public class UserProfileDto {
     private String role;
     private String address;
     private byte[] image;
+    private String imageBase64;
 }

@@ -11,4 +11,5 @@ public class ResponseCode {
     public static final String FAILED_TO_LOAD_PDF_TEMPLATE = "1007";
     public static final String GENERAL_INVALID_FORMAT = "1008";
     public static final String FILE_SIZE_TO_LARGE = "1009";
+    public static final String NULL_EXCEPTION = "1010";
 }

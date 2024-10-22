@@ -6,6 +6,7 @@ import com.manulife.id.dto.RequestPaging;
 import com.manulife.id.dto.ResponsePagingDto;
 import com.manulife.id.dto.UserProfileDto;
 import com.manulife.id.exception.BadRequestException;
+import com.manulife.id.exception.ProcessException;
 import com.manulife.id.factory.UserProfileFactory;
 import com.manulife.id.model.MasterUser;
 import com.manulife.id.repository.UserRepository;
@@ -23,12 +24,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -131,11 +133,31 @@ public class UserProfileService {
 
     public ByteArrayInputStream exportPdf(HttpServletRequest servletRequest) {
         String template = "/templates/SimpleReport.jrxml";
+        String defaultImagePath = "src/main/resources/static/images/broken-image.png";
+        String encodedImage;
+        try {
+            Path imagePath = Paths.get(defaultImagePath);
+            byte[] defaultImage = Files.readAllBytes(imagePath);
+            encodedImage = Base64.getEncoder().encodeToString(defaultImage);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ProcessException("Unknown error", ResponseCode.GENERAL_ERROR);
+        }
 
         List<MasterUser> listEntity = repository.findAllByIsDeletedFalse();
         List<UserProfileDto> listDto = listEntity.stream()
                 .map(x -> factory.buildDto(x))
                 .collect(Collectors.toList());
+
+        for (UserProfileDto user : listDto) {
+            if (user.getImageBase64() == null) {
+                user.setImageBase64(encodedImage);
+            }else {
+                String base64 = Base64.getEncoder().encodeToString(user.getImage());
+                user.setImageBase64(base64);
+            }
+        }
+
         Map<String, Object> data = new HashMap<>();
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listDto);

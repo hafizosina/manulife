@@ -62,9 +62,15 @@ public class UserProfileView extends VerticalLayout {
         actionButtons.setWidth("100%");
         add(actionButtons);
 
-        this.grid = new Grid<>(UserProfileDto.class);
+        this.grid = new Grid<>();
 
+        grid.addColumn(UserProfileDto::getFullname).setHeader("Full Name");
+        grid.addColumn(UserProfileDto::getUsername).setHeader("Username");
+//        grid.addColumn(UserProfileDto::getEmail).setHeader("Email");
+//        grid.addColumn(UserProfileDto::getRole).setHeader("Role");
+//        grid.addColumn(UserProfileDto::getAddress).setHeader("Address");
         grid.addComponentColumn(this::createImageComponent).setHeader("Image");
+        grid.addComponentColumn(this::createUploadImageButton).setHeader("Upload");
         grid.addComponentColumn(this::createEditButton).setHeader("Edit");
         grid.addComponentColumn(this::createDeleteButton).setHeader("Delete");
 
@@ -91,6 +97,15 @@ public class UserProfileView extends VerticalLayout {
             image.setWidth("50px");
         }
         return image;
+    }
+
+    private Button createUploadImageButton(UserProfileDto userProfile) {
+        Button uploadButton = new Button("Upload", event ->{
+            UserProfileUploadImageDialog dialog = new UserProfileUploadImageDialog(userService, userProfile , () -> loadUserProfileDtos(currentPage) );
+            dialog.open();
+        });
+        uploadButton.addClassName("warning");
+        return uploadButton;
     }
     private Button createEditButton(UserProfileDto userProfile) {
         Button editButton = new Button("Edit", event ->{
