@@ -1,6 +1,7 @@
 package com.manulife.id.service;
 
 import com.manulife.id.constant.ResponseCode;
+import com.manulife.id.dto.ImageRequestDto;
 import com.manulife.id.dto.RequestPaging;
 import com.manulife.id.dto.ResponsePagingDto;
 import com.manulife.id.dto.UserProfileDto;
@@ -8,6 +9,7 @@ import com.manulife.id.exception.BadRequestException;
 import com.manulife.id.factory.UserProfileFactory;
 import com.manulife.id.model.MasterUser;
 import com.manulife.id.repository.UserRepository;
+import com.manulife.id.util.Base64Utils;
 import com.manulife.id.util.PDFGenerator;
 import com.manulife.id.util.ResponseUtil;
 import com.manulife.id.util.StringUtil;
@@ -77,6 +79,19 @@ public class UserProfileService {
     }
 
     @Transactional
+    public void uploadImage(ImageRequestDto request, HttpServletRequest servletRequest) {
+
+        MasterUser entity = repository.findByUsernameAndIsDeletedFalse(request.getUsername())
+                .orElseThrow(() -> new BadRequestException("User not found", ResponseCode.GENERAL_NOT_FOUND));
+
+        byte[] byteImage = Base64Utils.decodeBase64ToImage(request.getBase64());;
+        Base64Utils.validateImage(byteImage);
+
+        entity.setImage(byteImage);
+        repository.save(entity);
+    }
+
+    @Transactional
     public void delete(String username, HttpServletRequest servletRequest) {
         MasterUser entity = repository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(() -> new BadRequestException("User not found", ResponseCode.GENERAL_NOT_FOUND));
@@ -102,6 +117,15 @@ public class UserProfileService {
         return ResponseUtil.paging(listDto, pageData);
     }
 
+    public byte[] getImage(String username, HttpServletRequest servletRequest) {
+        MasterUser entity = repository.findByUsernameAndIsDeletedFalse(username)
+                .orElseThrow(() -> new BadRequestException("User not found", ResponseCode.GENERAL_NOT_FOUND));
+        byte[] image = entity.getImage();
+        if (image == null) {
+            throw new BadRequestException("No image found for user", ResponseCode.GENERAL_NOT_FOUND);
+        }
+        return image;
+    }
 
     public ByteArrayInputStream exportPdf(HttpServletRequest servletRequest) {
         String template = "/templates/SimpleReport.jrxml";
@@ -112,4 +136,5 @@ public class UserProfileService {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listEntity);
         return PDFGenerator.generateJasperFile(template,data, dataSource);
     }
+
 }

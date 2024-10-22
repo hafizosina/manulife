@@ -9,4 +9,6 @@ public class ResponseCode {
     public static final String GENERAL_NOT_FOUND = "1005";
     public static final String IMPORTANT_DATA_IS_EMPTY = "1006";
     public static final String FAILED_TO_LOAD_PDF_TEMPLATE = "1007";
+    public static final String GENERAL_INVALID_FORMAT = "1008";
+    public static final String FILE_SIZE_TO_LARGE = "1009";
 }

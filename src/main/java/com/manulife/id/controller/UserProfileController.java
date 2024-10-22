@@ -1,10 +1,7 @@
 package com.manulife.id.controller;
 
 
-import com.manulife.id.dto.RequestPaging;
-import com.manulife.id.dto.ResponseDto;
-import com.manulife.id.dto.ResponsePagingDto;
-import com.manulife.id.dto.UserProfileDto;
+import com.manulife.id.dto.*;
 import com.manulife.id.service.UserProfileService;
 import com.manulife.id.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +38,22 @@ public class UserProfileController {
     public ResponseDto<UserProfileDto> update(@RequestBody UserProfileDto request, HttpServletRequest servletRequest) {
         UserProfileDto dto = service.update(request, servletRequest);
         return ResponseUtil.success(dto);
+    }
+
+    @PutMapping("/upload")
+    @Operation(summary = "2. Upload User Image", description = "Upload User Image")
+    public ResponseDto<String> uploadImage(@RequestBody ImageRequestDto request, HttpServletRequest servletRequest) {
+        service.uploadImage(request, servletRequest);
+        return ResponseUtil.success("Success");
+    }
+
+    @GetMapping(value = "/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getUserImage(@RequestParam("username") String username, HttpServletRequest servletRequest) {
+        byte[] image = service.getImage(username, servletRequest);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
     }
 
     @DeleteMapping("/")
