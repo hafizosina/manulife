@@ -51,7 +51,7 @@ http://localhost:8080/api/manulife/
 ```
 This will take you to the main web app.
 
-API Documentation
+## API Documentation
 
 For API documentation, you can access via
 ```bash
