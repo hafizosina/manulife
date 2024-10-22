@@ -1,17 +1,14 @@
 package com.manulife.id.view.userprofile;
 
-import com.manulife.id.constant.ResponseCode;
 import com.manulife.id.dto.RequestPaging;
 import com.manulife.id.dto.ResponsePagingDto;
 import com.manulife.id.dto.UserProfileDto;
-import com.manulife.id.exception.BadRequestException;
 import com.manulife.id.service.UserProfileService;
 import com.manulife.id.view.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -19,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -68,7 +64,7 @@ public class UserProfileView extends VerticalLayout {
 
         this.grid = new Grid<>(UserProfileDto.class);
 
-        // Add edit and delete buttons to the grid
+        grid.addComponentColumn(this::createImageComponent).setHeader("Image");
         grid.addComponentColumn(this::createEditButton).setHeader("Edit");
         grid.addComponentColumn(this::createDeleteButton).setHeader("Delete");
 
@@ -81,6 +77,21 @@ public class UserProfileView extends VerticalLayout {
         loadUserProfileDtos(currentPage);
     }
 
+    private Image createImageComponent(UserProfileDto userProfile) {
+        Image image = new Image();
+        if (userProfile.getImage() != null) {
+            image.setSrc(new StreamResource("user-image-" + userProfile.getId(),
+                    () -> new ByteArrayInputStream(userProfile.getImage())));
+            image.setAlt("User Image");
+            image.setHeight("50px");
+            image.setWidth("50px");
+        } else {
+            image.setSrc("images/broken-image.png");
+            image.setHeight("50px");
+            image.setWidth("50px");
+        }
+        return image;
+    }
     private Button createEditButton(UserProfileDto userProfile) {
         Button editButton = new Button("Edit", event ->{
             UserProfileEditDialog dialog = new UserProfileEditDialog(userService, userProfile , () -> loadUserProfileDtos(currentPage) );

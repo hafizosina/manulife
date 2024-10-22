@@ -17,6 +17,7 @@ public class UserProfileFactory implements AbstractFactory<MasterUser, UserProfi
                 .password(null)
                 .role(entity.getRole())
                 .address(entity.getAddress())
+                .image(entity.getImage())
                 .build();
     }
 
