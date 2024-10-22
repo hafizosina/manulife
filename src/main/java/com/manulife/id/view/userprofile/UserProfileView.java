@@ -7,6 +7,7 @@ import com.manulife.id.dto.UserProfileDto;
 import com.manulife.id.exception.BadRequestException;
 import com.manulife.id.service.UserProfileService;
 import com.manulife.id.view.MainLayout;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -21,8 +22,12 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamRegistration;
+import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Route(value = "users", layout = MainLayout.class)
@@ -49,7 +54,7 @@ public class UserProfileView extends VerticalLayout {
 
         Icon downloadIcon = VaadinIcon.DOWNLOAD.create(); // Create a download icon
         downloadIcon.getElement().getStyle().set("margin-right", "5px"); // Optional: add some spacing
-        downloadButton = new Button("Download Report", downloadIcon, event -> downloadReport());
+        downloadButton = new Button("Generate Report", downloadIcon, event -> downloadReport());
 
         HorizontalLayout actionButtons = new HorizontalLayout(createButton, refreshButton, downloadButton);
         actionButtons.setJustifyContentMode(JustifyContentMode.END);
@@ -109,7 +114,6 @@ public class UserProfileView extends VerticalLayout {
                 loadUserProfileDtos(currentPage);
             } else {
                 throw new BadRequestException("Please fill in all fields correctly.", ResponseCode.IMPORTANT_DATA_IS_EMPTY);
-//                Notification.show("Please fill in all fields correctly.", 3000, Notification.Position.MIDDLE);
             }
         });
 
@@ -123,8 +127,22 @@ public class UserProfileView extends VerticalLayout {
         dialog.open();
     }
 
-    private String downloadReport(){
-        return "Success";
+    private void downloadReport() {
+        StreamResource resource = new StreamResource("List User.pdf", this::generatePdf);
+        resource.setContentType("application/pdf");
+
+        // https://vaadin.com/forum/t/download-link-or-button/157314/7
+        final StreamRegistration registration = VaadinSession.getCurrent().getResourceRegistry().registerResource(resource);
+        UI.getCurrent().getPage().executeJs("window.open($0, $1)", registration.getResourceUri().toString(), "_blank");
+    }
+
+    private ByteArrayInputStream generatePdf() {
+        try {
+            return userService.exportPdf(null);
+        } catch (Exception e) {
+            Notification.show("Error generating PDF: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
+            return null;
+        }
     }
 
     private boolean isValidInput(TextField fullname, TextField email, TextField username, PasswordField password, TextField rolefield) {
