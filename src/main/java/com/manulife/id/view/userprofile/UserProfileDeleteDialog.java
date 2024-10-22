@@ -12,13 +12,15 @@ public class UserProfileDeleteDialog extends Dialog {
 
     private final UserProfileService userService;
     private final UserProfileDto userProfile;
+    private final Runnable onCloseCallback;
 
     Button saveButton;
     Button cancelButton;
     
-    UserProfileDeleteDialog (UserProfileService userService, UserProfileDto userProfile) {
+    UserProfileDeleteDialog (UserProfileService userService, UserProfileDto userProfile, Runnable onCloseCallback) {
         this.userService = userService;
         this.userProfile = userProfile;
+        this.onCloseCallback = onCloseCallback;
         createDialog();
     }
 
@@ -38,6 +40,7 @@ public class UserProfileDeleteDialog extends Dialog {
     private void deleteUserProfile() {
         userService.delete(userProfile.getUsername(), null);
         close();
+        onCloseCallback.run();
     }
 
 }

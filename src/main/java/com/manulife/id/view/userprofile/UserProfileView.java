@@ -49,7 +49,10 @@ public class UserProfileView extends VerticalLayout {
     public UserProfileView(UserProfileService userService) {
         this.userService = userService;
 
-        createButton = new Button("Create", event -> openCreateUserProfileDialog());
+        createButton = new Button("Create", event -> {
+            UserProfileCreateDialog dialog = new UserProfileCreateDialog(userService , () -> loadUserProfileDtos(currentPage) );
+            dialog.open();
+        });
         createButton.addClassName("primary");
 
         refreshButton = new Button("Refresh", event -> loadUserProfileDtos(currentPage));
@@ -80,9 +83,8 @@ public class UserProfileView extends VerticalLayout {
 
     private Button createEditButton(UserProfileDto userProfile) {
         Button editButton = new Button("Edit", event ->{
-            UserProfileEditDialog dialog = new UserProfileEditDialog(userService, userProfile);
+            UserProfileEditDialog dialog = new UserProfileEditDialog(userService, userProfile , () -> loadUserProfileDtos(currentPage) );
             dialog.open();
-            loadUserProfileDtos(currentPage);  // todo : the refesh shold be happen when the dialog is closed
         });
         editButton.addClassName("warning");
         return editButton;
@@ -90,7 +92,7 @@ public class UserProfileView extends VerticalLayout {
 
     private Button createDeleteButton(UserProfileDto userProfile) {
         Button deleteButton = new Button("Delete", event -> {
-            UserProfileDeleteDialog dialog = new UserProfileDeleteDialog(userService, userProfile);
+            UserProfileDeleteDialog dialog = new UserProfileDeleteDialog(userService, userProfile, () -> loadUserProfileDtos(currentPage) );
             dialog.open();
             loadUserProfileDtos(currentPage);
         });
@@ -106,51 +108,6 @@ public class UserProfileView extends VerticalLayout {
 
         previousButton.setEnabled(page > 0);
         nextButton.setEnabled(page < response.getTotalPages() - 1);
-    }
-
-    private void openCreateUserProfileDialog() {
-        Dialog dialog = new Dialog();
-        dialog.setModal(true);
-        dialog.setWidth("60%");
-
-        TextField fullnameField = new TextField("Full Name");
-        fullnameField.setWidth("100%");
-        TextField emailField = new TextField("Email");
-        emailField.setWidth("100%");
-        TextField usernameField = new TextField("Username");
-        usernameField.setWidth("100%");
-        TextField roleField = new TextField("Role");
-        roleField.setWidth("100%");
-        TextArea addressField = new TextArea("Address");
-        addressField.setWidth("100%");
-        PasswordField passwordField = new PasswordField("Password");
-        passwordField.setWidth("100%");
-
-        Button saveButton = new Button("Save", event -> {
-            if (isValidInput(fullnameField, emailField, usernameField, passwordField, roleField)) {
-                UserProfileDto newUserProfile = new UserProfileDto();
-                newUserProfile.setFullname(fullnameField.getValue());
-                newUserProfile.setEmail(emailField.getValue());
-                newUserProfile.setUsername(usernameField.getValue());
-                newUserProfile.setPassword(passwordField.getValue());
-                newUserProfile.setAddress(addressField.getValue());
-                newUserProfile.setRole(roleField.getValue());
-                userService.create(newUserProfile, null);
-                dialog.close();
-                loadUserProfileDtos(currentPage);
-            } else {
-                throw new BadRequestException("Please fill in all fields correctly.", ResponseCode.IMPORTANT_DATA_IS_EMPTY);
-            }
-        });
-
-        Button cancelButton = new Button("Cancel", event -> dialog.close());
-        VerticalLayout formLayout = new VerticalLayout(fullnameField, emailField, usernameField, passwordField, roleField, addressField, saveButton, cancelButton);
-        formLayout.setWidth("100%");
-        formLayout.setPadding(true);
-        formLayout.setSpacing(true);
-
-        dialog.add(formLayout);
-        dialog.open();
     }
 
     private void downloadReport() {

@@ -9,75 +9,78 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class UserProfileEditDialog extends Dialog {
+import static javax.swing.JColorChooser.createDialog;
+
+public class UserProfileCreateDialog extends Dialog {
 
     private final UserProfileService userService;
-    private final UserProfileDto userProfile;
     private final Runnable onCloseCallback;
     TextField fullnameField;
     TextField emailField ;
     TextField usernameField;
+    PasswordField passwordField;
     TextField roleField;
     TextArea addressField;
 
     Button saveButton;
     Button cancelButton;
     @Autowired
-    public UserProfileEditDialog(UserProfileService userService, UserProfileDto userProfile, Runnable onCloseCallback) {
+    public UserProfileCreateDialog(UserProfileService userService,  Runnable onCloseCallback) {
         this.userService = userService;
-        this.userProfile = userProfile;
         this.onCloseCallback = onCloseCallback;
         createDialog();
     }
 
+
     public void createDialog() {
 
-        setHeaderTitle("Edit User Profile");
+        setHeaderTitle("Create User Profile");
         setModal(true);
         setWidth("60%");
 
         fullnameField = new TextField("Full Name");
         fullnameField.setWidth("100%");
-        fullnameField.setValue(userProfile.getFullname());
         emailField = new TextField("Email");
         emailField.setWidth("100%");
-        emailField.setValue(userProfile.getEmail());
         usernameField = new TextField("Username");
         usernameField.setWidth("100%");
-        usernameField.setValue(userProfile.getUsername());
+        passwordField = new PasswordField("Password");
+        passwordField.setWidth("100%");
         roleField = new TextField("Role");
         roleField.setWidth("100%");
-        roleField.setValue(userProfile.getRole());
         addressField = new TextArea("Address");
         addressField.setWidth("100%");
-        addressField.setValue(userProfile.getAddress());
 
         saveButton = new Button("Save", event -> saveUserProfile());
         cancelButton = new Button("Cancel", event -> close());
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(fullnameField, emailField, usernameField, roleField,addressField);
+        formLayout.add(fullnameField, emailField, usernameField, passwordField, roleField,addressField);
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton,cancelButton);
         add(formLayout,buttonLayout);
     }
 
     private void saveUserProfile() {
-        if ( VadiinValidationUtils.isValidInput(fullnameField, emailField, usernameField, roleField)) {
+        if ( VadiinValidationUtils.isValidInput(fullnameField, emailField, usernameField, passwordField, roleField)) {
             UserProfileDto newUserProfile = new UserProfileDto();
             newUserProfile.setFullname(fullnameField.getValue());
             newUserProfile.setEmail(emailField.getValue());
             newUserProfile.setUsername(usernameField.getValue());
             newUserProfile.setAddress(addressField.getValue());
             newUserProfile.setRole(roleField.getValue());
-            userService.update(newUserProfile, null);
+            newUserProfile.setPassword(passwordField.getValue());
+            userService.create(newUserProfile, null);
             close();
             onCloseCallback.run();
         } else {
             throw new BadRequestException("Please fill in all fields correctly.", ResponseCode.IMPORTANT_DATA_IS_EMPTY);
         }
     }
+
+
 }
