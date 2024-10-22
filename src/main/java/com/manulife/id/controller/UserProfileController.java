@@ -11,8 +11,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 @RestController
 @RequestMapping(value = "/user-profile")
@@ -54,5 +61,15 @@ public class UserProfileController {
     @Operation(summary = "5. Get Paged User Profiles", description = "Get user profiles with pagination")
     public ResponsePagingDto<List<UserProfileDto>> getPaging(@RequestBody RequestPaging request, HttpServletRequest servletRequest) {
         return service.getPaging(request, servletRequest);
+    }
+    @GetMapping("/exportpdf")
+    @Operation(summary = "6. Download PDF File", description = "Download PDF File")
+    public ResponseEntity<Resource> exportPdf(HttpServletRequest servletRequest) {
+        String fileName = "List User.pdf";
+        InputStreamResource file = new InputStreamResource(service.exportPdf(servletRequest));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(file);
     }
 }

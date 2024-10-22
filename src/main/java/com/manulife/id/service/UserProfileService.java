@@ -8,10 +8,12 @@ import com.manulife.id.exception.BadRequestException;
 import com.manulife.id.factory.UserProfileFactory;
 import com.manulife.id.model.MasterUser;
 import com.manulife.id.repository.UserRepository;
+import com.manulife.id.util.PDFGenerator;
 import com.manulife.id.util.ResponseUtil;
 import com.manulife.id.util.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +21,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -94,5 +100,16 @@ public class UserProfileService {
         Page<MasterUser> pageData = repository.findAllByIsDeletedFalse(pageable);
         List<UserProfileDto> listDto = pageData.getContent().stream().map(x -> factory.buildDto(x)).collect(Collectors.toList());
         return ResponseUtil.paging(listDto, pageData);
+    }
+
+
+    public ByteArrayInputStream exportPdf(HttpServletRequest servletRequest) {
+        String template = "/templates/SimpleReport.jrxml";
+
+        List<MasterUser> listEntity = repository.findAllByIsDeletedFalse();
+        Map<String, Object> data = new HashMap<>();
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listEntity);
+        return PDFGenerator.generateJasperFile(template,data, dataSource);
     }
 }

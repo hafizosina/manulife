@@ -8,4 +8,5 @@ public class ResponseCode {
     public static final String USERNAME_ALREADY_USED = "1004";
     public static final String GENERAL_NOT_FOUND = "1005";
     public static final String IMPORTANT_DATA_IS_EMPTY = "1006";
+    public static final String FAILED_TO_LOAD_PDF_TEMPLATE = "1007";
 }
