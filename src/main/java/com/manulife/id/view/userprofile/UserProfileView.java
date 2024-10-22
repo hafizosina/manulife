@@ -9,6 +9,7 @@ import com.manulife.id.service.UserProfileService;
 import com.manulife.id.view.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
@@ -47,6 +48,7 @@ public class UserProfileView extends VerticalLayout {
     @Autowired
     public UserProfileView(UserProfileService userService) {
         this.userService = userService;
+
         createButton = new Button("Create", event -> openCreateUserProfileDialog());
         createButton.addClassName("primary");
 
@@ -63,6 +65,10 @@ public class UserProfileView extends VerticalLayout {
 
         this.grid = new Grid<>(UserProfileDto.class);
 
+        // Add edit and delete buttons to the grid
+        grid.addComponentColumn(this::createEditButton).setHeader("Edit");
+        grid.addComponentColumn(this::createDeleteButton).setHeader("Delete");
+
         previousButton = new Button("Previous", event -> loadUserProfileDtos(--currentPage));
         nextButton = new Button("Next", event -> loadUserProfileDtos(++currentPage));
 
@@ -70,6 +76,26 @@ public class UserProfileView extends VerticalLayout {
 
         add(grid, pagination);
         loadUserProfileDtos(currentPage);
+    }
+
+    private Button createEditButton(UserProfileDto userProfile) {
+        Button editButton = new Button("Edit", event ->{
+            UserProfileEditDialog dialog = new UserProfileEditDialog(userService, userProfile);
+            dialog.open();
+            loadUserProfileDtos(currentPage);  // todo : the refesh shold be happen when the dialog is closed
+        });
+        editButton.addClassName("warning");
+        return editButton;
+    }
+
+    private Button createDeleteButton(UserProfileDto userProfile) {
+        Button deleteButton = new Button("Delete", event -> {
+            UserProfileDeleteDialog dialog = new UserProfileDeleteDialog(userService, userProfile);
+            dialog.open();
+            loadUserProfileDtos(currentPage);
+        });
+        deleteButton.addClassName("error");;
+        return deleteButton;
     }
 
     private void loadUserProfileDtos(int page) {
