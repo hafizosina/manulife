@@ -31,7 +31,7 @@
 		<property name="com.jaspersoft.studio.field.label" value="ADDRESS"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="M_USER"/>
 	</field>
-	<field name="image" class="java.sql.Blob">
+	<field name="image" class="java.io.InputStream">
 		<property name="com.jaspersoft.studio.field.name" value="IMAGE"/>
 		<property name="com.jaspersoft.studio.field.label" value="IMAGE"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="M_USER"/>
@@ -172,8 +172,9 @@
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout"/>
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="562e7c52-51bb-4387-9c56-452ff74ed438">
+				<reportElement stretchType="ElementGroupBottom" x="0" y="0" width="100" height="20" uuid="562e7c52-51bb-4387-9c56-452ff74ed438">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b6934988-d1c2-4851-9b67-11466238f878"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
@@ -190,7 +191,7 @@
 				<textFieldExpression><![CDATA[$F{fullname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="154" height="20" uuid="68063186-2629-41ab-8567-2ae72324f050">
+				<reportElement stretchType="ElementGroupBottom" x="100" y="0" width="154" height="20" uuid="68063186-2629-41ab-8567-2ae72324f050">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -206,7 +207,7 @@
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="255" y="0" width="100" height="20" uuid="62d86f21-eb3b-42a5-afbd-7d0f68211606">
+				<reportElement stretchType="ElementGroupBottom" x="255" y="0" width="100" height="20" uuid="62d86f21-eb3b-42a5-afbd-7d0f68211606">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -222,7 +223,7 @@
 				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="355" y="0" width="100" height="20" uuid="dfd14aed-803a-4a50-b5b3-72207b568294">
+				<reportElement stretchType="ElementGroupBottom" x="355" y="0" width="100" height="20" uuid="dfd14aed-803a-4a50-b5b3-72207b568294">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -237,22 +238,16 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{role}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="455" y="0" width="100" height="20" uuid="7894c964-9347-454a-8728-cb3a5d726a18">
-					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-				</reportElement>
+			<image scaleImage="RealHeight" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement stretchType="ElementGroupHeight" x="455" y="0" width="100" height="20" uuid="63bf81f7-ae7a-47e9-98d8-666fbcb7ba0e"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="11"/>
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{image}]]></textFieldExpression>
-			</textField>
+				<imageExpression><![CDATA[$F{image}]]></imageExpression>
+			</image>
 		</band>
 	</detail>
 	<columnFooter>
